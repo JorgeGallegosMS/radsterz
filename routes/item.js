@@ -1,5 +1,4 @@
 const express = require('express')
-const { findByIdAndDelete } = require('../models/item')
 const router = express.Router()
 const Item = require('../models/item')
 
