@@ -14,8 +14,9 @@ app.get('/', (req, res) => {
 })
 
 // Routes
-const itemRoutes = require('./routes/item')
+const routes = require('./routes')
 
-app.use('/items', itemRoutes)
+app.use('/items', routes.itemRoutes)
+app.use('/users', routes.userRoutes)
 
 app.listen(port, () => console.log(`http://localhost:${port}`))
