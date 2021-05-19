@@ -43,6 +43,7 @@ router.put('/:id/edit', async (req, res) => {
         res.json({error: error.message})
     }
 })
+
 // Delete user
 router.delete('/:id/delete', async (req, res) => {
     try {
