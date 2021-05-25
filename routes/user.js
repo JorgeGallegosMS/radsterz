@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const bcrypt = require('bcrypt')
 const { User } = require('../models')
 
 // Get all users
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 router.post('/new', async (req, res) => {
     try {
         const user = await User.create(req.body)
-        res.json(user)
+        res.redirect(`/users/${user._id}`)
     } catch (error) {
         res.json({error: error.message})
     }
@@ -45,9 +46,25 @@ router.put('/:id/edit', async (req, res) => {
 })
 
 // Delete user
-router.delete('/:id/delete', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id)
+        res.json(user)
+    } catch (error) {
+        res.json({error: error.message})
+    }
+})
+
+// Login
+router.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body
+        const users = await User.find({username})
+        const user = users[0]
+
+        const match = await bcrypt.compare(password, user.password)
+        if (!match) throw new Error('Wrong username or password')
+
         res.json(user)
     } catch (error) {
         res.json({error: error.message})
