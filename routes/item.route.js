@@ -1,12 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const itemController = require('../controllers/item.controller')
+const checkAuth = require('../middlware/auth')
 
 // Get all items
 router.get('/', itemController.getAllItems)
 
 // Create new item
-router.post('/new', itemController.newItem)
+router.post('/new', checkAuth, itemController.newItem)
 
 // Show item
 router.get('/:id', itemController.showItem)

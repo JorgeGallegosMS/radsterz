@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const userController = require('../controllers/user.controller')
+const checkAuth = require('../middlware/auth')
 
 // Get all users
 router.get('/', userController.getAllUsers)
@@ -19,5 +20,8 @@ router.delete('/:id', userController.deleteUser)
 
 // Login
 router.post('/login', userController.login)
+
+// Validate token
+router.post('/validate', checkAuth, userController.checkToken)
 
 module.exports = router
