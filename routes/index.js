@@ -1,5 +1,5 @@
-const itemRoutes = require('./item')
-const userRoutes = require('./user')
+const itemRoutes = require('./item.route')
+const userRoutes = require('./user.route')
 
 const routes = {
     itemRoutes,
