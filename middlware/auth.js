@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 
 const checkAuth = (req, res, next) => {
   try {
-    console.log('Checking')
     const token = req.header('auth-token')
   
     if (!token) throw new Error('You are not authorized to do that')

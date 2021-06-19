@@ -13,7 +13,7 @@ router.post('/new', userController.newUser)
 router.get('/:id', userController.showUser)
 
 // Edit user
-router.put('/:id/edit', userController.editUser)
+router.put('/:id', userController.editUser)
 
 // Delete user
 router.delete('/:id', userController.deleteUser)

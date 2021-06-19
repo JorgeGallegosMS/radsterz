@@ -16,7 +16,7 @@ const userRoutes = {
     try {
         const user = await User.create(req.body)
         const {_doc: { _id, username}} = user
-        const payload = { id: _id, username: username }
+        const payload = { id: _id, username }
         const options = { expiresIn: '1d' }
 
         const token = jwt.sign(payload, secret, options)

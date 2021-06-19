@@ -1,0 +1,31 @@
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.new-item-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+form > input {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 2.5rem;
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 1rem;
+}
+
+/* #image {
+  border: none;
+} */
+
+input:focus {
+  outline: none;
+}
