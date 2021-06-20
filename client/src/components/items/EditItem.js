@@ -19,12 +19,9 @@ const EditItem = () => {
         },
         data: itemInfo
       })
-      console.log({...data})
       const filteredItems = items.filter(item => item._id !== id)
-      console.log({filteredItems})
       setItems([data, ...filteredItems])
-      console.log(items)
-      history.replace('/items')
+      history.replace('/')
     } catch (error) {
       console.log(error.message)
     }

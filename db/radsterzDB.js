@@ -12,7 +12,7 @@ mongoose.connect(databaseURL, options);
 
 mongoose.connection.on('connected', () => {
     // mongoose.connection.dropDatabase()
-    console.log('Connectedddd')
+    // console.log('Connectedddd')
 })
 
 module.exports = mongoose.connection

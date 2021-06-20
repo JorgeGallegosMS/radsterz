@@ -19,9 +19,8 @@ const NewItem = () => {
         },
         data: itemInfo
       })
-      console.log({...data})
       setItems([...items, {...data}])
-      history.replace('/items')
+      history.replace(`/items/${data._id}`)
     } catch (error) {
       console.log(error.message)
     }

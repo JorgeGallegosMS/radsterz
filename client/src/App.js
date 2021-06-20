@@ -25,26 +25,26 @@ const App = () => {
   useEffect(() => {
     getItems()
       .then(data => {
-        console.log(data)
         setItems(data)
       })
   }, [])
   return items ? (
-    <>
-      <Router>
+    <Router>
+      <nav>
         <Link to="/">Home</Link>
         <Link to="/items/new">New</Link>
-        <ItemContext.Provider value={{ items, setItems }}>
-          <Switch>
-            <Route path="/" exact component={() => <Redirect to="/items"/>}/>
-            <Route path="/items" exact component={Items}/>
-            <Route path="/items/new" component={NewItem} />
-            <Route path="/items/:id" exact component={ShowItem}/>
-            <Route path="/items/:id/edit" component={EditItem}/>
-          </Switch>
-        </ItemContext.Provider>
-      </Router>
-    </>
+      </nav>
+      <ItemContext.Provider value={{ items, setItems }}>
+        <Switch>
+          <Route path="/" exact component={() => <Redirect to="/items"/>}/>
+          <Route path="/items" exact component={Items}/>
+          <Route path="/items/new" component={NewItem} />
+          <Route path="/items/:id" exact component={ShowItem}/>
+          <Route path="/items/:id/edit" component={EditItem}/>
+          <Route path="*" component={() => <>You have landed on a page that does not exist</>}/>
+        </Switch>
+      </ItemContext.Provider>
+    </Router>
   ) : (
     <h1>Loading...</h1>
   )

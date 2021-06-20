@@ -1,20 +1,22 @@
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import ItemContext from '../../context/ItemContext'
 import axios from 'axios'
 
 const Item = ({ id }) => {
+  const history = useHistory()
   const { items, setItems } = useContext(ItemContext)
-  const item = items.filter(item => item._id === id)[0]
+  const item = items.filter(data => data._id === id)[0]
+  console.log(item)
   const removeItem = async () => {
     try {
       const { data: { deleted } } = await axios({
         method: 'DELETE',
-        url: `/items/${item._id}`
+        url: `/items/${id}`
       })
-      const filteredItems = items.filter(data => data._id !== item._id)
+      const filteredItems = items.filter(data => data._id !== id)
       setItems([...filteredItems])
-      console.log(deleted)
+      history.push('/')
     } catch (error) {
       console.log(error.message)
     }
@@ -24,8 +26,8 @@ const Item = ({ id }) => {
       <h1>{item.name}</h1>
       <h2>{item.description}</h2>
       <h3>{item.price/100}</h3>
-      <Link to={`/items/${item._id}/edit`}>Edit</Link>
-      <Link to={`/items/${item._id}`}>View</Link>
+      <button><Link to={`/items/${item._id}/edit`}>Edit</Link></button>
+      <button><Link to={`/items/${item._id}`}>View</Link></button>
       <button onClick={removeItem}>Delete</button>
     </div>
   )

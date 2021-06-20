@@ -13,7 +13,6 @@ const ItemForm = (props) => {
     event.preventDefault()
     props.handleSubmit({...item})
   }
-  console.log(item)
   return (
     <>
       <input 
