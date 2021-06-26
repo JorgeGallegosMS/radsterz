@@ -1,6 +1,11 @@
 const express = require('express')
 const app = express()
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const { port } = require('./vars')
+
+app.use(cors())
+app.use(cookieParser())
 
 // Database connection
 require('./db/radsterzDB')

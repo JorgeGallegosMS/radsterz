@@ -15,7 +15,11 @@ const itemSchema = new Schema({
         type: Number,
         required: true
     },
-    image: {
+    imageId: {
+        type: String,
+        required: true
+    },
+    imageUrl: {
         type: String,
         required: true
     }

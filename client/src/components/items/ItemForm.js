@@ -5,13 +5,37 @@ const ItemForm = (props) => {
     name: props.item ? props.item.name : '',
     description: props.item ? props.item.description : '',
     price: props.item ? props.item.price: '',
-    image: props.item ? props.item.image: ''
+    imageId: props.item ? props.item.imageId: '',
+    imageUrl: props.item ? props.item.imageUrl: ''
   })
-  const { name, description, price, image } = item
+  const { name, description, price, imageId } = item
 
-  const handleSubmit = event => {
-    event.preventDefault()
-    props.handleSubmit({...item})
+  const [imageData, setImageData] = useState('')
+
+  const imageChange = event => {
+    const files = event.target.files
+    if (!event.target.files.length) return
+    const reader = new FileReader()
+    reader.readAsDataURL(files[0])
+    reader.onloadend = () => {
+      setImageData(reader.result)
+    }
+  }
+
+  const handleSubmit = async event => {
+    try {
+      event.preventDefault()
+      const formData = new FormData()
+      formData.append('name', name)
+      formData.append('description', description)
+      formData.append('price', price)
+      formData.append('imageId', imageId)
+      if (imageData) formData.append('imageData', imageData)
+      
+      props.handleSubmit(formData)
+    } catch (error) {
+      console.warn(error)
+    }
   }
   return (
     <>
@@ -39,21 +63,21 @@ const ItemForm = (props) => {
         value={price}
         onChange={event => setItem({...item, price: event.target.value})}
       />
-      {/* <input 
+      <input 
         type="file" 
         name="image" 
         id="image" 
         accept="image/*"
-        onChange={event => handleChange(event, setImage)}
-      /> */}
-      <input 
+        onChange={imageChange}
+      />
+      {/* <input 
         type="text" 
         name="image" 
         id="image" 
         placeholder="Image Link"
         value={image}
         onChange={event => setItem({...item, image: event.target.value})}
-      />
+      /> */}
       <button onClick={handleSubmit} type="submit">{props.button}</button>
     </>
   )

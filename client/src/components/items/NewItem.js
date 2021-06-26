@@ -1,13 +1,10 @@
-import { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import ItemForm from './ItemForm'
-import ItemContext from '../../context/ItemContext'
 import './css/NewItem.css'
 import axios from 'axios'
 
 
 const NewItem = () => {
-  const { items, setItems } = useContext(ItemContext)
   const history = useHistory()
   const handleSubmit = async itemInfo => {
     try {
@@ -15,14 +12,13 @@ const NewItem = () => {
         method: 'POST',
         url: '/items/new',
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "multipart/form-data"
         },
         data: itemInfo
       })
-      setItems([...items, {...data}])
       history.replace(`/items/${data._id}`)
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
   return (

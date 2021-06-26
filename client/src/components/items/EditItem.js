@@ -1,38 +1,53 @@
-import { useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import ItemContext from '../../context/ItemContext'
 import axios from 'axios'
 import ItemForm from './ItemForm'
 
 const EditItem = () => {
   const history = useHistory()
-  const { items, setItems } = useContext(ItemContext)
   const { id } = useParams()
-  const item = items.filter(item => item._id === id)[0]
+  const [item, setItem] = useState()
+  
+  useEffect(() => {
+    (
+      async () => {
+        try {
+          const { data } = await axios({
+            method: 'GET',
+            url: `/items/${id}`
+          })
+          setItem(data)
+        } catch(error) {
+          console.error(error.message)
+        }
+      }
+    )()
+  }, [id])
+
   const handleSubmit = async itemInfo => {
     try {
-      const { data } = await axios({
+      await axios({
         method: 'PUT',
         url: `/items/${id}`,
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "multipart/form-data"
         },
         data: itemInfo
       })
-      const filteredItems = items.filter(item => item._id !== id)
-      setItems([data, ...filteredItems])
       history.replace('/')
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
-  return (
+  return item ? (
     <>
       <form encType="multipart/form-data">
         <h1>Edit Item</h1>
         <ItemForm handleSubmit={handleSubmit} item={item} button={"Update"}/>
       </form>
     </>
+  ) : (
+    <>Loading...</>
   )
 }
 

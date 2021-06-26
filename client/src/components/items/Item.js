@@ -1,33 +1,26 @@
-import { useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import ItemContext from '../../context/ItemContext'
 import axios from 'axios'
 
-const Item = ({ id }) => {
+const Item = ({ item }) => {
   const history = useHistory()
-  const { items, setItems } = useContext(ItemContext)
-  const item = items.filter(data => data._id === id)[0]
-  console.log(item)
   const removeItem = async () => {
     try {
-      const { data: { deleted } } = await axios({
+      await axios({
         method: 'DELETE',
-        url: `/items/${id}`
+        url: `/items/${item._id}`
       })
-      const filteredItems = items.filter(data => data._id !== id)
-      setItems([...filteredItems])
       history.push('/')
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
   return (
     <div>
       <h1>{item.name}</h1>
       <h2>{item.description}</h2>
-      <h3>{item.price/100}</h3>
+      <h3>${item.price/100}</h3>
+      <Link to={`/items/${item._id}`}><img src={item.imageUrl} alt=""/></Link>
       <button><Link to={`/items/${item._id}/edit`}>Edit</Link></button>
-      <button><Link to={`/items/${item._id}`}>View</Link></button>
       <button onClick={removeItem}>Delete</button>
     </div>
   )
