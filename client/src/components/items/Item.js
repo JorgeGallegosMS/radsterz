@@ -7,7 +7,7 @@ const Item = ({ item }) => {
     try {
       await axios({
         method: 'DELETE',
-        url: `/items/${item._id}`
+        url: `/api/items/${item._id}`
       })
       history.push('/')
     } catch (error) {

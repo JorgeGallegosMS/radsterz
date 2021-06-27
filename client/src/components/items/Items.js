@@ -12,7 +12,7 @@ const Items = () => {
         try {
           const { data } = await axios({
             method: 'GET',
-            url: '/items',
+            url: '/api/items',
           })
           setItems(data)
         } catch (error) {

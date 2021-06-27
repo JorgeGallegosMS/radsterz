@@ -10,7 +10,7 @@ const NewItem = () => {
     try {
       const { data } = await axios({
         method: 'POST',
-        url: '/items/new',
+        url: '/api/items/new',
         headers: {
           "Content-Type": "multipart/form-data"
         },
@@ -22,12 +22,10 @@ const NewItem = () => {
     }
   }
   return (
-    <>
       <form className="new-item-form" encType="multipart/form-data">
         <h1>New Item</h1>
         <ItemForm handleSubmit={handleSubmit} button={"Create Item"}/>
       </form>
-    </>
   )
 }
 

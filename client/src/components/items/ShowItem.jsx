@@ -13,7 +13,7 @@ const ShowItem = () => {
         try {
           const { data } = await axios({
             method: 'GET',
-            url: `/items/${id}`
+            url: `/api/items/${id}`
           })
           setItem(data)
         } catch (error) {
@@ -23,11 +23,9 @@ const ShowItem = () => {
     )()
   }, [id])
   return item ? (
-    <>
       <Item item={item}/>
-    </>
   ) : (
-    <>Loading...</>
+    <div>Loading...</div>
   )
 }
 

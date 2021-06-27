@@ -14,7 +14,7 @@ const EditItem = () => {
         try {
           const { data } = await axios({
             method: 'GET',
-            url: `/items/${id}`
+            url: `/api/items/${id}`
           })
           setItem(data)
         } catch(error) {
@@ -28,7 +28,7 @@ const EditItem = () => {
     try {
       await axios({
         method: 'PUT',
-        url: `/items/${id}`,
+        url: `/api/items/${id}`,
         headers: {
           "Content-Type": "multipart/form-data"
         },
@@ -40,12 +40,10 @@ const EditItem = () => {
     }
   }
   return item ? (
-    <>
       <form encType="multipart/form-data">
         <h1>Edit Item</h1>
         <ItemForm handleSubmit={handleSubmit} item={item} button={"Update"}/>
       </form>
-    </>
   ) : (
     <>Loading...</>
   )
