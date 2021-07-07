@@ -21,7 +21,7 @@ const App = () => {
         <Route path="/items/new" component={NewItem} />
         <Route path="/items/:id" exact component={ShowItem}/>
         <Route path="/items/:id/edit" component={EditItem}/>
-        <Route path="*" component={() => <>You have landed on a page that does not exist</>}/>
+        <Route path="*" render={() => <>You have landed on a page that does not exist</>}/>
       </Switch>
     </Router>
   )

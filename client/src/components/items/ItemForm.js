@@ -34,7 +34,7 @@ const ItemForm = (props) => {
       
       props.handleSubmit(formData)
     } catch (error) {
-      console.warn(error)
+      console.error(error)
     }
   }
   return (
@@ -70,14 +70,6 @@ const ItemForm = (props) => {
         accept="image/*"
         onChange={imageChange}
       />
-      {/* <input 
-        type="text" 
-        name="image" 
-        id="image" 
-        placeholder="Image Link"
-        value={image}
-        onChange={event => setItem({...item, image: event.target.value})}
-      /> */}
       <button onClick={handleSubmit} type="submit">{props.button}</button>
     </>
   )
