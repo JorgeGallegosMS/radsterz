@@ -1,12 +1,9 @@
 import { Link, useHistory } from 'react-router-dom'
-import cloudinary from '../../lib/cloudinary'
-import { AdvancedImage } from '@cloudinary/react'
-import { fill } from '@cloudinary/base/actions/resize'
+import { Image, Transformation } from 'cloudinary-react'
+import { cloudName } from '../../vars'
 import axios from 'axios'
 
 const Item = ({ item }) => {
-  const image = cloudinary.image(`Items/${item.imageId}`)
-  image.resize(fill().width(400).height(400))
   const history = useHistory()
   const removeItem = async () => {
     try {
@@ -20,13 +17,17 @@ const Item = ({ item }) => {
     }
   }
   return (
-    <div>
+    <div className="item-info">
       <h1>{item.name}</h1>
       <h2>{item.description}</h2>
       <h3>${item.price/100}</h3>
-      <Link to={`/items/${item._id}`}><AdvancedImage cldImg={image}/></Link>
-      <button><Link to={`/items/${item._id}/edit`}>Edit</Link></button>
-      <button onClick={removeItem}>Delete</button>
+      <Link to={`/items/${item._id}`}>
+        <Image cloudName={cloudName} public-id={`${item.imageId}.jpg`}>
+          <Transformation width="300" height="300" crop="fill"/>
+        </Image>
+      </Link>
+      <Link className="btn" to={`/items/${item._id}/edit`}>Edit</Link>
+      <a className="btn" onClick={removeItem}>Delete</a>
     </div>
   )
 }

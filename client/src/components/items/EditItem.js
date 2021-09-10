@@ -16,6 +16,7 @@ const EditItem = () => {
             method: 'GET',
             url: `/api/items/${id}`
           })
+          console.log(data)
           setItem(data)
         } catch(error) {
           console.error(error.message)
@@ -26,7 +27,7 @@ const EditItem = () => {
 
   const handleSubmit = async itemInfo => {
     try {
-      await axios({
+      const { data } = await axios({
         method: 'PUT',
         url: `/api/items/${id}`,
         headers: {
@@ -34,6 +35,11 @@ const EditItem = () => {
         },
         data: itemInfo
       })
+      if (data.statusCode !== 200) {
+        console.log(`There was an error: Code: ${data.statusCode}`)
+        return
+      }
+
       history.replace('/')
     } catch (error) {
       console.error(error.message)

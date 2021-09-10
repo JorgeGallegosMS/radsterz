@@ -16,9 +16,14 @@ const NewItem = () => {
         },
         data: itemInfo
       })
-      history.replace(`/items/${data._id}`)
+      if (data.statusCode !== 200) {
+        console.log(`There was an error: Code: ${data.statusCode}`)
+        return
+      }
+      console.log(data)
+      history.replace(`/items/${data.item._id}`)
     } catch (error) {
-      console.error(error.message)
+      console.error(error)
     }
   }
   return (

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 const ItemForm = (props) => {
+  const [error, setError] = useState('')
   const [item, setItem] = useState({
     name: props.item ? props.item.name : '',
     description: props.item ? props.item.description : '',
@@ -13,8 +14,8 @@ const ItemForm = (props) => {
   const [imageData, setImageData] = useState('')
 
   const imageChange = event => {
-    const files = event.target.files
     if (!event.target.files.length) return
+    const files = event.target.files
     const reader = new FileReader()
     reader.readAsDataURL(files[0])
     reader.onloadend = () => {
@@ -25,12 +26,19 @@ const ItemForm = (props) => {
   const handleSubmit = async event => {
     try {
       event.preventDefault()
+      const newOrUpdate = !!(props.button === 'Update' ? (imageData ? !!imageData: true) : !!imageData)
+      console.log(`nOU : ${newOrUpdate}`)
+      const formFilled = !!(name && description && price && newOrUpdate)
+      if (!formFilled) {
+        setError('Form has not been filled completely')
+        return
+      }
       const formData = new FormData()
       formData.append('name', name)
       formData.append('description', description)
       formData.append('price', price)
       formData.append('imageId', imageId)
-      if (imageData) formData.append('imageData', imageData)
+      imageData && formData.append('imageData', imageData)
       
       props.handleSubmit(formData)
     } catch (error) {
@@ -39,6 +47,7 @@ const ItemForm = (props) => {
   }
   return (
     <>
+      {error && <div className='error' onClick={e => setError('')}>{error}</div>}
       <input 
         type="text" 
         name="name" 
@@ -70,7 +79,7 @@ const ItemForm = (props) => {
         accept="image/*"
         onChange={imageChange}
       />
-      <button onClick={handleSubmit} type="submit">{props.button}</button>
+      <button className="btn" onClick={handleSubmit} type="submit">{props.button}</button>
     </>
   )
 }
