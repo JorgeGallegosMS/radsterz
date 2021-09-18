@@ -1,25 +1,41 @@
-body {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Work Sans";
-  font-weight: bold;
 }
 
-a {
+a,
+button.nav-link {
   text-decoration: none;
-  color: black;
+  color: white;
 }
 
 a:visited {
-  color: black;
+  color: white;
+}
+
+button.nav-link {
+  border: none;
+  background-color: black;
+  cursor: pointer;
 }
 
 nav {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  margin-bottom: 2.5rem;
+  margin-bottom: 5rem;
+  padding: 1rem;
+  background: black;
+  position: sticky;
+}
+
+img {
+  border: 3px solid black;
+  border-radius: 10px;
 }
 
 .error {
@@ -37,7 +53,6 @@ nav {
 .btn {
   font-family: "Work Sans";
   font-size: 1.2rem;
-  font-weight: bolder;
   padding: 0.4rem;
   border: 1px solid white;
   color: white;
@@ -49,6 +64,15 @@ nav {
 
 .btn:visited {
   color: white;
+}
+
+.cart-length {
+  background-color: black;
+  color: white;
+  padding: 0.3rem;
+  border: 1px solid white;
+  border-radius: 10px;
+  font-size: 1rem;
 }
 
 #root {
