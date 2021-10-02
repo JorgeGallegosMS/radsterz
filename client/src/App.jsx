@@ -1,7 +1,6 @@
-import { Items, NewItem, EditItem, ShowItem, Cart } from './components'
+import { Items, NewItem, EditItem, ShowItem, Cart, Receipt } from './components'
 import './App.css'
-import { useContext } from 'react'
-import { CartContext } from './context/CartContext'
+import { useCart, ACTIONS } from './context/CartContext'
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,20 +8,27 @@ import {
   Redirect,
   Link
 } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const App = () => {
-  const [cart, setCart] = useContext(CartContext)
-  const resetCart = () => {
-    localStorage.removeItem('cart')
-    setCart([])
-  }
+  const [cart, dispatch] = useCart()
+
+  useEffect(() => {
+    const localCart = localStorage.getItem('cart')
+    if (localCart) {
+      dispatch({
+        type: ACTIONS.SET, 
+        cart: JSON.parse(localCart)
+      })
+    }
+  }, [])
+  
   return (
     <Router>
       <nav className="navbar">
         <Link className="nav-link" to="/">Home</Link>
         <Link className="nav-link" to="/items/new">New</Link>
         <Link className="nav-link" to="/cart">Cart{' '}<span className="cart-length">{cart.length}</span></Link>
-        <button className="nav-link" onClick={resetCart}>Remove Local Storgae Cart</button>
       </nav>
       <div className="main">
         <Switch>
@@ -32,6 +38,7 @@ const App = () => {
           <Route path="/items/:id" exact component={ShowItem}/>
           <Route path="/items/:id/edit" component={EditItem}/>
           <Route path="/cart" component={Cart}/>
+          <Route path="/payment/success" component={Receipt}/>
           <Route path="*" render={() => <>You have landed on a page that does not exist</>}/>
         </Switch>
       </div>

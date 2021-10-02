@@ -27,7 +27,6 @@ const ItemForm = (props) => {
     try {
       event.preventDefault()
       const newOrUpdate = !!(props.button === 'Update' ? (imageData ? !!imageData: true) : !!imageData)
-      console.log(`nOU : ${newOrUpdate}`)
       const formFilled = !!(name && description && price && newOrUpdate)
       if (!formFilled) {
         setError('Form has not been filled completely')

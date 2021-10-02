@@ -21,5 +21,6 @@ const routes = require('./routes')
 
 app.use('/api/items', routes.itemRoutes)
 app.use('/api/users', routes.userRoutes)
+app.use('/api/stripe', routes.stripeRoutes)
 
 app.listen(port, () => console.log(`http://localhost:${port}`))

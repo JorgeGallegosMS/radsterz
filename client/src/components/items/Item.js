@@ -1,29 +1,33 @@
-import { useContext } from 'react'
-import { CartContext } from '../../context/CartContext'
+import { useCart, ACTIONS } from '../../context/CartContext'
 import { Link, useHistory } from 'react-router-dom'
 import { Image, Transformation } from 'cloudinary-react'
 import { cloudName } from '../../vars'
 import axios from 'axios'
 
 const Item = ({ item }) => {
-  const [cart, setCart] = useContext(CartContext)
+  const [cart, dispatch] = useCart()
+
+  const history = useHistory()
 
   const addToCart = (item) => {
+    const { name, price, imageId, _id, imageUrl } = item
     const found = cart.find(cartItem => cartItem.id === item._id)
     if (!found) {
       const cartItem = {
-        id: item._id,
-        name: item.name,
-        price: item.price,
-        imageId: item.imageId,
+        name,
+        price,
+        imageId,
+        id: _id,
+        imageUrl,
         quantity: 1
       }
-      localStorage.setItem('cart', JSON.stringify([...cart, cartItem]))
-      setCart([...cart, cartItem])
+      dispatch({
+        type: ACTIONS.ADD,
+        item: cartItem
+      })
     }
   }
-
-  const history = useHistory()
+  
   const removeItem = async () => {
     try {
       const { data } = await axios({
@@ -32,11 +36,7 @@ const Item = ({ item }) => {
       })
       const itemId = data.deleted._id
       const found = cart.find(cartItem => cartItem.id === itemId)
-      if (found) {
-        const newCart = cart.filter(cartItem => cartItem.id !== itemId)
-        localStorage.setItem('cart', JSON.stringify(newCart))
-        setCart(newCart)
-      }
+      if (found) dispatch({type: ACTIONS.REMOVE, id: found.id})
       history.push('/')
     } catch (error) {
       console.error(error.message)

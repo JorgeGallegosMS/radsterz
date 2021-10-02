@@ -1,36 +1,76 @@
 import CartItem from './CartItem'
-import { useContext } from "react"
-import { CartContext } from "../../context/CartContext"
-
-// TODO: Set up increment/decrement quantity, and remove from cart
+import axios from 'axios'
+import { useCart, ACTIONS } from "../../context/CartContext"
 
 const Cart = () => {
-  const [cart, setCart] = useContext(CartContext)
+  const [cart, dispatch] = useCart()
 
   const increment = id => {
     const found = cart.find(cartItem => cartItem.id === id)
     if (found) {
-      const newCart = cart.map(cartItem => cartItem.id === id ? {...found, quantity: found.quantity+1} : cartItem)
-      localStorage.setItem('cart', JSON.stringify(newCart))
-      setCart(newCart)
+      dispatch({
+        type: ACTIONS.INCREMENT,
+        item: found
+      })
     }
   }
 
   const decrement = id => {
     const found = cart.find(cartItem => cartItem.id === id)
-    const newCart = found.quantity === 1 ? 
-        cart.filter(cartItem => cartItem.id !== id) : 
-        cart.map(cartItem => cartItem.id === id ? {...found, quantity: found.quantity-1} : cartItem)
-    localStorage.setItem('cart', JSON.stringify(newCart))
-    setCart(newCart)
+    if (found) {
+      found.quantity === 1 ? 
+      dispatch({type: ACTIONS.REMOVE, id: found.id}) : 
+      dispatch({type: ACTIONS.DECREMENT, item: found})
+    }
   }
 
-  return (
-    <div>
-      {cart.map(cartItem => (
-        <CartItem key={cartItem.id} cartItem={cartItem} increment={increment} decrement={decrement}/>
-      ))}
-    </div>
+  const setupStripeData = cart => {
+    return cart.map(cartItem => {
+      const { name, price, quantity } = cartItem
+      return {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name,
+            images: [cartItem.imageUrl]
+          },
+          unit_amount: price
+        },
+        quantity
+      }
+    })
+  }
+
+  const checkout = async () => {
+    const stripeLineItems = setupStripeData(cart)
+    try {
+      if (cart.length < 1) return
+      const { data } = await axios({
+        method: 'POST',
+        url: '/api/stripe/checkout',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        data: stripeLineItems
+      })
+      window.location.href = data.url
+    } catch (error) {
+      console.error(error)
+    }
+  }
+  
+  return cart.length ? (
+    <>
+      <div>
+        {cart.map(
+          cartItem => <CartItem key={cartItem.id} cartItem={cartItem} increment={increment} decrement={decrement}/>
+        )}
+      </div>
+      <button className="btn" onClick={checkout}>Checkout</button>
+      <button className="btn" onClick={() => dispatch({type: ACTIONS.EMPTY})}>Empty Cart</button>
+    </>
+  ) : (
+    <div>There are no items in the cart</div>
   )
 }
 

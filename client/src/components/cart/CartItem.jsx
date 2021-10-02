@@ -12,7 +12,7 @@ const CartItem = ({cartItem, increment, decrement}) => {
           <Transformation width="300" height="300" crop="fill"/>
         </Image>
       </Link>
-      <h3>Quantity: {cartItem.quantity}</h3> <button className="btn" onClick={() => decrement(cartItem.id)}>-</button> <button className="btn" onClick={() => increment(cartItem.id)}>+</button>
+      <h3>X{cartItem.quantity}</h3> <button className="btn" onClick={() => decrement(cartItem.id)}>-</button> <button className="btn" onClick={() => increment(cartItem.id)}>+</button>
     </>
   )
 }

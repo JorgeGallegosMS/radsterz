@@ -12,17 +12,9 @@ const itemRoutes = {
   },
   newItem: async (req, res) => {
     try {
-        // const { public_id, secure_url } = await cloudinary.uploader.upload(req.body.imageData, {folder: 'Items'})
-        // const data = public_id.split('/')
-        // const id = data[data.length-1]
-        // const body = req.body
-        // const itemInfo = {...body, price: parseInt(body.price), imageId: id, imageUrl: secure_url }
-        
-        // const item = await Item.create(itemInfo)
-        // res.json({item, statusCode: 200})
-        const { public_id } = await cloudinary.uploader.upload(req.body.imageData, {upload_preset: 'test_preset'})
+        const { public_id, secure_url } = await cloudinary.uploader.upload(req.body.imageData, {upload_preset: 'test_preset'})
         const body = req.body
-        const itemInfo = {...body, price: parseInt(body.price), imageId: public_id }
+        const itemInfo = {...body, price: parseInt(body.price), imageId: public_id, imageUrl: secure_url }
         const item = await Item.create(itemInfo)
         
         res.json({item, statusCode: 200})
@@ -48,11 +40,11 @@ const itemRoutes = {
           // Invalidates cached image CDNs in Cloudinary
           await cloudinary.uploader.destroy(body.imageId)
 
-          const { public_id } = await cloudinary.uploader.upload(body.imageData, {
+          const { public_id, secure_url } = await cloudinary.uploader.upload(body.imageData, {
             upload_preset: 'test_preset'
           })
           
-          itemInfo = {...body, price: parseInt(body.price), imageId: public_id }
+          itemInfo = {...body, price: parseInt(body.price), imageId: public_id, imageUrl: secure_url }
         } else {
           itemInfo = {...req.body, price: parseInt(req.body.price)}
         }

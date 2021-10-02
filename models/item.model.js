@@ -21,6 +21,14 @@ const itemSchema = new Schema({
         type: String,
         required: 'ImageId is required',
         trim: true
+    },
+    imageUrl: {
+        type: String,
+        required: 'ImageUrl is required'
+    },
+    inStock: {
+        type: Number,
+        default: 1
     }
 })
 

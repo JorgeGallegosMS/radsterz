@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { useCart, ACTIONS } from '../../context/CartContext'
 import { useParams, useHistory } from 'react-router-dom'
 import axios from 'axios'
 import ItemForm from './ItemForm'
 
 const EditItem = () => {
+  const [cart, dispatch] = useCart()
   const history = useHistory()
   const { id } = useParams()
   const [item, setItem] = useState()
@@ -16,7 +18,7 @@ const EditItem = () => {
             method: 'GET',
             url: `/api/items/${id}`
           })
-          console.log(data)
+
           setItem(data)
         } catch(error) {
           console.error(error.message)
@@ -35,9 +37,19 @@ const EditItem = () => {
         },
         data: itemInfo
       })
-      if (data.statusCode !== 200) {
-        console.log(`There was an error: Code: ${data.statusCode}`)
-        return
+
+      const found = cart.find(cartItem => cartItem.id === data.item._id)
+      if (found) {
+        const { imageId, imageUrl } = data.item
+        const newCart = cart.map(
+          cartItem => cartItem.id === found.id ? 
+          {...found, imageUrl, imageId} : 
+          cartItem
+        )
+        dispatch({
+          type: ACTIONS.SET,
+          cart: newCart
+        })
       }
 
       history.replace('/')
