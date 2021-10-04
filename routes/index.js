@@ -1,11 +1,11 @@
-const itemRoutes = require('./item.route')
-const userRoutes = require('./user.route')
-const stripeRoutes = require('./stripe.route')
+const itemRoutes = require("./item.route");
+const userRoutes = require("./user.route");
+const stripeRoutes = require("./stripe.route");
 
 const routes = {
-    itemRoutes,
-    userRoutes,
-    stripeRoutes
-}
+  itemRoutes,
+  userRoutes,
+  stripeRoutes,
+};
 
-module.exports = routes
+module.exports = routes;

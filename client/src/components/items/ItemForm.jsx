@@ -12,10 +12,13 @@ const ItemForm = (props) => {
   const { name, description, price, imageId } = item
 
   const [imageData, setImageData] = useState('')
+  const [image, setImage] = useState('')
 
   const imageChange = event => {
     if (!event.target.files.length) return
     const files = event.target.files
+    console.log(files)
+    setImage(files[0])
     const reader = new FileReader()
     reader.readAsDataURL(files[0])
     reader.onloadend = () => {
@@ -37,6 +40,7 @@ const ItemForm = (props) => {
       formData.append('description', description)
       formData.append('price', price)
       formData.append('imageId', imageId)
+      image && formData.append('image', image)
       imageData && formData.append('imageData', imageData)
       
       props.handleSubmit(formData)

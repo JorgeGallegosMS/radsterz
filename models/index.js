@@ -1,9 +1,9 @@
-const Item = require('./item.model')
-const User = require('./user.model')
+const Item = require("./item.model");
+const User = require("./user.model");
 
 const models = {
-    Item,
-    User
-}
+  Item,
+  User,
+};
 
-module.exports = models
+module.exports = models;

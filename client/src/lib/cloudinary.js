@@ -1,10 +1,10 @@
-import { Cloudinary } from '@cloudinary/base'
-import { cloudName } from '../vars'
+import { Cloudinary } from "@cloudinary/base";
+import { cloudName } from "../vars";
 
 const cloudinary = new Cloudinary({
   cloud: {
-    cloudName
-  }
-})
+    cloudName,
+  },
+});
 
-export default cloudinary
+export default cloudinary;

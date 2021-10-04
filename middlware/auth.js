@@ -1,18 +1,9 @@
-const { secret } = require('../vars')
-const jwt = require('jsonwebtoken')
-
 const checkAuth = (req, res, next) => {
-  try {
-    const token = req.header('auth-token')
-  
-    if (!token) throw new Error('You are not authorized to do that')
-
-    const decoded = jwt.verify(token, secret)
-    req.user = decoded
-    next()
-  } catch (error) {
-    res.json({error: error.message})
+  if (!req.session || !req.session.user) {
+    const error = new Error("You need to be logged in to do that");
+    next(error);
   }
-}
+  next();
+};
 
-module.exports = checkAuth 
+module.exports = checkAuth;

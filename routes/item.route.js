@@ -1,25 +1,22 @@
-const express = require('express')
-const router = express.Router()
-const itemController = require('../controllers/item.controller')
-const multer = require('multer')
-const upload = multer()
-
-router.use(upload.single('image'))
-// const checkAuth = require('../middlware/auth')
+const express = require("express");
+const router = express.Router();
+const itemController = require("../controllers/item.controller");
+const multer = require("multer");
+const upload = multer();
 
 // Get all items
-router.get('/', itemController.getAllItems)
+router.get("/", itemController.getAllItems);
 
 // Create new item
-router.post('/new', itemController.newItem)
+router.post("/new", upload.single("image"), itemController.newItem);
 
 // Show item
-router.get('/:id', itemController.showItem)
+router.get("/:id", itemController.showItem);
 
 // Edit item
-router.put('/:id', itemController.editItem)
+router.put("/:id", upload.single("image"), itemController.editItem);
 
 // Delete an item
-router.delete('/:id', itemController.deleteItem)
+router.delete("/:id", itemController.deleteItem);
 
-module.exports = router
+module.exports = router;
