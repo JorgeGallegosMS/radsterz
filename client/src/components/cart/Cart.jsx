@@ -1,6 +1,6 @@
 import CartItem from "./CartItem";
 import axios from "axios";
-import { useCart, ACTIONS } from "../../context/CartContext";
+import { useCart, CARTACTIONS } from "../../context/CartContext";
 
 const Cart = () => {
   const [cart, dispatch] = useCart();
@@ -9,7 +9,7 @@ const Cart = () => {
     const found = cart.find((cartItem) => cartItem.id === id);
     if (found) {
       dispatch({
-        type: ACTIONS.INCREMENT,
+        type: CARTACTIONS.INCREMENT,
         item: found,
       });
     }
@@ -19,8 +19,8 @@ const Cart = () => {
     const found = cart.find((cartItem) => cartItem.id === id);
     if (found) {
       found.quantity === 1
-        ? dispatch({ type: ACTIONS.REMOVE, id: found.id })
-        : dispatch({ type: ACTIONS.DECREMENT, item: found });
+        ? dispatch({ type: CARTACTIONS.REMOVE, id: found.id })
+        : dispatch({ type: CARTACTIONS.DECREMENT, item: found });
     }
   };
 
@@ -37,6 +37,7 @@ const Cart = () => {
           unit_amount: price,
         },
         quantity,
+        tax_rates: ["txr_1JrEkDBEW4WMldnyKxOpngXy"],
       };
     });
   };
@@ -74,7 +75,10 @@ const Cart = () => {
       <button className="btn" onClick={checkout}>
         Checkout
       </button>
-      <button className="btn" onClick={() => dispatch({ type: ACTIONS.EMPTY })}>
+      <button
+        className="btn"
+        onClick={() => dispatch({ type: CARTACTIONS.EMPTY })}
+      >
         Empty Cart
       </button>
     </>

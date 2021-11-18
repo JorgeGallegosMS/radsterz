@@ -30,24 +30,11 @@ nav {
   margin-bottom: 5rem;
   padding: 1rem;
   background: black;
-  position: sticky;
 }
 
 img {
   border: 3px solid black;
   border-radius: 10px;
-}
-
-.error {
-  background-color: #f70e0d;
-  color: white;
-  padding: 1.2rem;
-  border-radius: 10px;
-}
-
-.item-info {
-  display: flex;
-  flex-direction: column;
 }
 
 .btn {
@@ -67,16 +54,43 @@ img {
 }
 
 .cart-length {
-  background-color: black;
+  background-color: red;
   color: white;
   padding: 0.3rem;
-  border: 1px solid white;
+  border: 2px solid white;
   border-radius: 10px;
-  font-size: 1rem;
+}
+
+.error,
+.errors {
+  background-color: #f70e0d;
+  color: white;
+  padding: 1.2rem;
+  border-radius: 10px;
+}
+
+.errors {
+  padding: 1.6rem;
 }
 
 .home-link:visited {
   color: black;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.items {
+  display: flex;
+  flex-wrap: wrap;
+  width: 70%;
+  justify-content: space-evenly;
+}
+
+.main {
+  width: 100%;
 }
 
 #root {

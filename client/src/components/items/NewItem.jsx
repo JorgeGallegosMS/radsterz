@@ -15,6 +15,7 @@ const NewItem = () => {
         },
         data: itemInfo,
       });
+      console.log(data);
       history.replace(`/items/${data.item._id}`);
     } catch (error) {
       console.error(error);

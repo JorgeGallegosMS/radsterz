@@ -29,10 +29,8 @@ const itemRoutes = {
   },
   newItem: async (req, res) => {
     try {
-      const { public_id, secure_url } = await cloudinary.uploader.upload(
-        req.body.imageData,
-        { upload_preset: "test_preset" }
-      );
+      const imageBuffer = req.file.buffer;
+      const { public_id, secure_url } = await uploadFromBuffer(imageBuffer);
       const body = req.body;
       const itemInfo = {
         ...body,
@@ -60,7 +58,6 @@ const itemRoutes = {
   },
   editItem: async (req, res) => {
     try {
-      console.log(req.file);
       let itemInfo;
 
       if (req.file) {

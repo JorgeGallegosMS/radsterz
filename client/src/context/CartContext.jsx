@@ -2,7 +2,7 @@ import { createContext, useReducer, useContext } from "react";
 
 export const CartContext = createContext();
 
-export const ACTIONS = {
+export const CARTACTIONS = {
   ADD: "addToCart",
   REMOVE: "removeFromCart",
   INCREMENT: "increment",
@@ -13,17 +13,18 @@ export const ACTIONS = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case ACTIONS.ADD: {
+    case CARTACTIONS.ADD: {
       const newCart = [...state, action.item];
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     }
-    case ACTIONS.REMOVE: {
+    case CARTACTIONS.REMOVE: {
       const newCart = state.filter((cartItem) => cartItem.id !== action.id);
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     }
-    case ACTIONS.INCREMENT: {
+    case CARTACTIONS.INCREMENT: {
+      if (action.item.quantity === action.item.inStock) return state;
       const newCart = state.map((cartItem) =>
         cartItem.id === action.item.id
           ? { ...action.item, quantity: action.item.quantity + 1 }
@@ -32,7 +33,7 @@ const reducer = (state, action) => {
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     }
-    case ACTIONS.DECREMENT: {
+    case CARTACTIONS.DECREMENT: {
       const newCart = state.map((cartItem) =>
         cartItem.id === action.item.id
           ? { ...action.item, quantity: action.item.quantity - 1 }
@@ -41,11 +42,11 @@ const reducer = (state, action) => {
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     }
-    case ACTIONS.SET: {
+    case CARTACTIONS.SET: {
       localStorage.setItem("cart", JSON.stringify(action.cart));
       return action.cart;
     }
-    case ACTIONS.EMPTY: {
+    case CARTACTIONS.EMPTY: {
       const newCart = [];
       localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;

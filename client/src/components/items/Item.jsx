@@ -1,4 +1,4 @@
-import { useCart, ACTIONS } from "../../context/CartContext";
+import { useCart, CARTACTIONS } from "../../context/CartContext";
 import { Link, useHistory } from "react-router-dom";
 import { Image, Transformation } from "cloudinary-react";
 import { cloudName } from "../../vars";
@@ -10,7 +10,7 @@ const Item = ({ item }) => {
   const history = useHistory();
 
   const addToCart = (item) => {
-    const { name, price, imageId, _id, imageUrl } = item;
+    const { name, price, imageId, _id, imageUrl, inStock } = item;
     const found = cart.find((cartItem) => cartItem.id === item._id);
     if (!found) {
       const cartItem = {
@@ -19,10 +19,11 @@ const Item = ({ item }) => {
         imageId,
         id: _id,
         imageUrl,
+        inStock,
         quantity: 1,
       };
       dispatch({
-        type: ACTIONS.ADD,
+        type: CARTACTIONS.ADD,
         item: cartItem,
       });
     }
@@ -36,7 +37,7 @@ const Item = ({ item }) => {
       });
       const itemId = data.deleted._id;
       const found = cart.find((cartItem) => cartItem.id === itemId);
-      if (found) dispatch({ type: ACTIONS.REMOVE, id: found.id });
+      if (found) dispatch({ type: CARTACTIONS.REMOVE, id: found.id });
       history.push("/");
     } catch (error) {
       console.error(error.message);
@@ -52,9 +53,6 @@ const Item = ({ item }) => {
           currency: "USD",
         })}
       </h3>
-      {cart.find((cartItem) => cartItem.id === item._id) && (
-        <div>This item is in your cart</div>
-      )}
       <Link to={`/items/${item._id}`}>
         <Image cloudName={cloudName} public-id={`${item.imageId}.jpg`}>
           <Transformation width="300" height="300" crop="fill" />

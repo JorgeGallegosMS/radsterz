@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from "react";
-import { useCart, ACTIONS } from "../../context/CartContext";
+import { useState, useEffect } from "react";
+import { useCart, CARTACTIONS } from "../../context/CartContext";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import ItemForm from "./ItemForm";
@@ -43,7 +43,7 @@ const EditItem = () => {
           cartItem.id === found.id ? { ...found, imageUrl, imageId } : cartItem
         );
         dispatch({
-          type: ACTIONS.SET,
+          type: CARTACTIONS.SET,
           cart: newCart,
         });
       }

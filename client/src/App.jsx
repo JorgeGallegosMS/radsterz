@@ -1,64 +1,67 @@
 import {
-  Items,
-  NewItem,
-  EditItem,
-  ShowItem,
-  Cart,
-  Receipt,
+  itemComponents,
+  checkoutComponents,
+  userComponents,
+  NavBar,
 } from "./components";
 import "./App.css";
-import { useCart, ACTIONS } from "./context/CartContext";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-  Link,
-} from "react-router-dom";
+import { useCart, CARTACTIONS } from "./context/CartContext";
+import { useUser } from "./context/UserContext";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { useEffect } from "react";
+import axios from "axios";
 
 const App = () => {
   const [cart, dispatch] = useCart();
+  const [user, setUser] = useUser();
 
   useEffect(() => {
     const localCart = localStorage.getItem("cart");
     if (localCart) {
       dispatch({
-        type: ACTIONS.SET,
+        type: CARTACTIONS.SET,
         cart: JSON.parse(localCart),
       });
     }
   }, []);
 
+  const logout = async () => {
+    await axios.post("/api/users/logout");
+    setUser("");
+    <Redirect to="/" />;
+  };
+
+  console.log(user ? JSON.stringify(user, null, 2) : "No user found");
+
   return (
-    <Router>
-      <nav className="navbar">
-        <Link className="nav-link" to="/">
-          Home
-        </Link>
-        <Link className="nav-link" to="/items/new">
-          New
-        </Link>
-        <Link className="nav-link" to="/cart">
-          Cart <span className="cart-length">{cart.length}</span>
-        </Link>
-      </nav>
-      <div className="main">
+    <>
+      <NavBar cart={cart} user={user} logout={logout} />
+      {user && (
+        <div>
+          Logged in as <strong>{user.name ? user.name : user.email}</strong>
+        </div>
+      )}
+      <>
         <Switch>
           <Route path="/" exact render={() => <Redirect to="/items" />} />
-          <Route path="/items" exact component={Items} />
-          <Route path="/items/new" component={NewItem} />
-          <Route path="/items/:id" exact component={ShowItem} />
-          <Route path="/items/:id/edit" component={EditItem} />
-          <Route path="/cart" component={Cart} />
-          <Route path="/payment/success" component={Receipt} />
+          <Route path="/register" component={userComponents.Register} />
+          <Route path="/login" component={userComponents.Login} />
+          <Route path="/items" exact component={itemComponents.Items} />
+          <Route path="/items/new" component={itemComponents.NewItem} />
+          <Route path="/items/:id" exact component={itemComponents.ShowItem} />
+          <Route path="/items/:id/edit" component={itemComponents.EditItem} />
+          <Route path="/cart" component={checkoutComponents.Cart} />
+          <Route
+            path="/payment/success"
+            component={checkoutComponents.Receipt}
+          />
           <Route
             path="*"
             render={() => <>You have landed on a page that does not exist</>}
           />
         </Switch>
-      </div>
-    </Router>
+      </>
+    </>
   );
 };
 

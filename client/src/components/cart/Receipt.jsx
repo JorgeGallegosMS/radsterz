@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { useCart, ACTIONS } from "../../context/CartContext";
+import { useCart, CARTACTIONS } from "../../context/CartContext";
 import PurchasedItem from "./PurchasedItem";
 
 const Receipt = () => {
@@ -12,7 +12,7 @@ const Receipt = () => {
   useEffect(() => {
     if (cart.length) {
       const newCart = [...cart];
-      dispatch({ type: ACTIONS.EMPTY });
+      dispatch({ type: CARTACTIONS.EMPTY });
       setPurchasedItems([...newCart]);
       setLoading(false);
     }
@@ -26,7 +26,7 @@ const Receipt = () => {
     <>
       <div>
         Order summary.{" "}
-        <button onClick={() => history.push("/")} className="btn" to="/">
+        <button onClick={() => history.push("/")} className="btn">
           Back home
         </button>
       </div>

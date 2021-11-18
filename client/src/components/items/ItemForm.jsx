@@ -1,90 +1,96 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 const ItemForm = (props) => {
-  const [error, setError] = useState('')
+  const [error, setError] = useState("");
   const [item, setItem] = useState({
-    name: props.item ? props.item.name : '',
-    description: props.item ? props.item.description : '',
-    price: props.item ? props.item.price: '',
-    imageId: props.item ? props.item.imageId: '',
-    imageUrl: props.item ? props.item.imageUrl: ''
-  })
-  const { name, description, price, imageId } = item
+    name: props.item ? props.item.name : "",
+    description: props.item ? props.item.description : "",
+    price: props.item ? props.item.price : "",
+    imageId: props.item ? props.item.imageId : "",
+    imageUrl: props.item ? props.item.imageUrl : "",
+  });
+  const { name, description, price, imageId } = item;
 
-  const [imageData, setImageData] = useState('')
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState("");
 
-  const imageChange = event => {
-    if (!event.target.files.length) return
-    const files = event.target.files
-    console.log(files)
-    setImage(files[0])
-    const reader = new FileReader()
-    reader.readAsDataURL(files[0])
-    reader.onloadend = () => {
-      setImageData(reader.result)
-    }
-  }
+  const imageChange = (event) => {
+    if (!event.target.files.length) return;
+    const files = event.target.files;
+    console.log(files);
+    setImage(files[0]);
+  };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     try {
-      event.preventDefault()
-      const newOrUpdate = !!(props.button === 'Update' ? (imageData ? !!imageData: true) : !!imageData)
-      const formFilled = !!(name && description && price && newOrUpdate)
-      if (!formFilled) {
-        setError('Form has not been filled completely')
-        return
+      event.preventDefault();
+      if (!image && props.button === "Create Item") {
+        setError("Please select an image");
+        return;
       }
-      const formData = new FormData()
-      formData.append('name', name)
-      formData.append('description', description)
-      formData.append('price', price)
-      formData.append('imageId', imageId)
-      image && formData.append('image', image)
-      imageData && formData.append('imageData', imageData)
-      
-      props.handleSubmit(formData)
+
+      const formFilled = !!(name && description && price);
+      if (!formFilled) {
+        setError("Form has not been filled completely");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("imageId", imageId);
+      image && formData.append("image", image);
+
+      props.handleSubmit(formData);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
   return (
     <>
-      {error && <div className='error' onClick={e => setError('')}>{error}</div>}
-      <input 
-        type="text" 
-        name="name" 
-        id="name" 
-        placeholder="Name" 
+      {error && (
+        <div className="error" onClick={(e) => setError("")}>
+          {error}
+        </div>
+      )}
+      <input
+        type="text"
+        name="name"
+        id="name"
+        placeholder="Name"
         value={name}
-        onChange={event => setItem({...item, name: event.target.value})}
+        onChange={(event) => setItem({ ...item, name: event.target.value })}
       />
-      <input 
-        type="text" 
-        name="description" 
-        id="description" 
+      <input
+        type="text"
+        name="description"
+        id="description"
         placeholder="Description"
         value={description}
-        onChange={event => setItem({...item, description: event.target.value})}
+        onChange={(event) =>
+          setItem({ ...item, description: event.target.value })
+        }
       />
-      <input 
+      <input
         type="text"
-        name="price" 
-        id="price" 
+        name="price"
+        id="price"
         placeholder="Price"
         value={price}
-        onChange={event => setItem({...item, price: event.target.value})}
+        onChange={(event) => setItem({ ...item, price: event.target.value })}
       />
-      <input 
-        type="file" 
-        name="image" 
-        id="image" 
+      <input
+        type="file"
+        name="image"
+        id="image"
         accept="image/*"
         onChange={imageChange}
       />
-      <button className="btn" onClick={handleSubmit} type="submit">{props.button}</button>
+      <button className="btn" onClick={handleSubmit} type="submit">
+        {props.button}
+      </button>
     </>
-  )
-}
+  );
+};
 
-export default ItemForm
+export default ItemForm;

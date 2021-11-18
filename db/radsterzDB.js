@@ -8,7 +8,12 @@ const options = {
   useCreateIndex: true,
 };
 
-mongoose.connect(databaseURL, options);
+mongoose
+  .connect(databaseURL, options)
+  .then(() => {
+    console.log("Connected to MongoDB Atlas");
+  })
+  .catch((error) => console.log(error));
 
 mongoose.connection.on("connected", () => {
   // mongoose.connection.dropDatabase()

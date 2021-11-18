@@ -1,62 +1,71 @@
 const { User } = require("../models");
+const { jwtSecret, env } = require("../vars");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const userRoutes = {
   getAllUsers: async (req, res) => {
     try {
-      const users = await User.find({});
+      const users = await User.find({}).exec();
       res.json(users);
     } catch (error) {
       res.json({ error: error.message });
     }
   },
-  signup: async (req, res) => {
+  register: async (req, res) => {
     try {
       const user = await User.create(req.body);
-      const {
-        _doc: { _id, username },
-      } = user;
+      const { password, ...userInfo } = user.toJSON();
 
-      const sessionUser = {
-        id: _id,
-        username,
-      };
+      const token = jwt.sign({ _id: user._id }, jwtSecret, {
+        expiresIn: env === "development" ? 30 : "7d",
+      });
 
-      req.session.user = sessionUser;
-      res.json(sessionUser);
+      res.cookie("session", token, {
+        httpOnly: true,
+        maxAge:
+          env === "development"
+            ? 1000 * 30 /* 30 seconds */
+            : 1000 * 60 * 60 * 24 * 7, // 1 week
+      });
+
+      res.json({ user: userInfo });
     } catch (error) {
       res.json({ error: error.message });
     }
   },
   showUser: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id);
+      console.log(req.userId);
+      const user = await User.findById(req.userId).exec();
       const filteredUser = {
         id: user._id,
-        username: user.username,
+        name: user.name,
       };
-      res.json(filteredUser);
+      res.json({ user: filteredUser, id: req.userId });
     } catch (error) {
       res.json({ error: error.message });
     }
   },
   editUser: async (req, res) => {
     try {
-      const userInfo = { ...req.body };
+      const userData = { ...req.body };
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
-        userInfo,
+        userData,
         { new: true }
-      );
+      ).exec();
 
-      res.json(updatedUser);
+      const { password, ...userInfo } = updatedUser;
+
+      res.json(userInfo);
     } catch (error) {
       res.json({ error: error.message });
     }
   },
   deleteUser: async (req, res) => {
     try {
-      const user = await User.findByIdAndDelete(req.params.id);
+      const user = await User.findByIdAndDelete(req.params.id).exec();
       res.json(user);
     } catch (error) {
       res.json({ error: error.message });
@@ -64,40 +73,49 @@ const userRoutes = {
   },
   login: async (req, res) => {
     try {
-      const { username, password } = req.body;
-      const users = await User.find({ username });
-      if (!users.length) throw new Error("Wrong username or password");
+      const users = await User.find({ email: req.body.email }).exec();
+      if (!users.length) return res.json({ error: "Wrong email or password" });
       const user = users[0];
 
-      const match = await bcrypt.compare(password, user.password);
-      if (!match) throw new Error("Wrong username or password");
+      const match = await bcrypt.compare(req.body.password, user.password);
+      if (!match) return res.json({ error: "Wrong email or password" });
 
-      const sessionUser = {
-        id: user._id,
-        username: user.username,
-      };
+      const { _id, name, email } = await user.toJSON();
 
-      req.session.user = sessionUser;
+      const token = jwt.sign({ _id }, jwtSecret, {
+        expiresIn: env === "development" ? 30 : "7d",
+      });
 
-      res.json(sessionUser);
+      res.cookie("session", token, {
+        httpOnly: true,
+        maxAge:
+          env === "development"
+            ? 1000 * 30 /* 30 seconds */
+            : 1000 * 60 * 60 * 24 * 7, // 1 week
+        secure: env !== "development",
+      });
+
+      return res.json({ user: { id: _id, name, email } });
     } catch (error) {
       res.json({ error: error.message });
     }
   },
   logout: async (req, res) => {
-    try {
-      req.session.destroy();
-      res.json("Destroyed session");
-    } catch (error) {
-      res.json({ error: error.message });
-    }
+    res.cookie("session", "", { maxAge: 0 });
+    res.redirect("/api/users/checkUser");
   },
-  checkToken: async (req, res) => {
+  getUser: async (req, res) => {
     try {
-      const user = await User.findById(req.user.id);
-      res.json({ valid: true, user });
+      if (!req.userId)
+        return res.json({
+          error: "You must be logged in to do that",
+        });
+      const user = await User.findOne({ _id: req.userId }).exec();
+
+      const { _id, name, email } = user.toJSON();
+      return res.json({ user: { id: _id, name, email } });
     } catch (error) {
-      res.json({ error: error.message });
+      return res.json({ error: "You must be logged in to do that" });
     }
   },
 };
