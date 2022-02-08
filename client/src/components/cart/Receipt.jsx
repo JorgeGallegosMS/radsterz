@@ -10,15 +10,11 @@ const Receipt = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (cart.length) {
-      const newCart = [...cart];
-      dispatch({ type: CARTACTIONS.EMPTY });
-      setPurchasedItems([...newCart]);
-      setLoading(false);
-    }
-  }, [cart]);
+    setPurchasedItems([...cart]);
+    dispatch({ type: CARTACTIONS.EMPTY });
+  }, []);
 
-  return loading ? (
+  return purchasedItems.length ? (
     <>
       <h1>Please wait...</h1>
     </>

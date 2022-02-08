@@ -20,7 +20,13 @@ const ShowItem = () => {
       }
     })();
   }, [id]);
-  return item ? <Item item={item} /> : <div>Loading...</div>;
+  return item ? (
+    <div className="grid">
+      <Item item={item} showItems={true} />
+    </div>
+  ) : (
+    <div>Loading...</div>
+  );
 };
 
 export default ShowItem;

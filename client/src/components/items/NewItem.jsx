@@ -1,6 +1,5 @@
 import { useHistory } from "react-router-dom";
 import ItemForm from "./ItemForm";
-import "./css/NewItem.css";
 import axios from "axios";
 
 const NewItem = () => {

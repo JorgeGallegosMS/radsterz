@@ -62,25 +62,37 @@ const Cart = () => {
 
   return cart.length ? (
     <>
-      <div>
-        {cart.map((cartItem) => (
-          <CartItem
-            key={cartItem.id}
-            cartItem={cartItem}
-            increment={increment}
-            decrement={decrement}
-          />
-        ))}
+      <table className="border-collapse w-full text-center border border-slate-500">
+        <thead>
+          <tr>
+            <th className="border border-slate-600">Item</th>
+            <th className="border border-slate-600">Price</th>
+            <th className="border border-slate-600">Quantity</th>
+            <th className="border border-slate-600">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cart.map((cartItem) => (
+            <CartItem
+              key={cartItem.id}
+              cartItem={cartItem}
+              increment={increment}
+              decrement={decrement}
+            />
+          ))}
+        </tbody>
+      </table>
+      <div className="flex">
+        <button className="btn" onClick={checkout}>
+          Checkout
+        </button>
+        <button
+          className="btn"
+          onClick={() => dispatch({ type: CARTACTIONS.EMPTY })}
+        >
+          Empty Cart
+        </button>
       </div>
-      <button className="btn" onClick={checkout}>
-        Checkout
-      </button>
-      <button
-        className="btn"
-        onClick={() => dispatch({ type: CARTACTIONS.EMPTY })}
-      >
-        Empty Cart
-      </button>
     </>
   ) : (
     <div>There are no items in the cart</div>
